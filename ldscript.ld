@@ -1,27 +1,24 @@
 ENTRY(deriveAndWriteSoc)
 
+MEMORY
+{
+  FLASH      (rx)  : ORIGIN = 0, LENGTH = 0x300 /* ORIGIN doesn't matter with -fPIC */
+  PROHIBITED_YOU_PROBABLY_INTRODUCED_A_GLOBAL_WRITABLE_VARIABLE (rwx) : ORIGIN = 0x20000000, LENGTH = 0
+}
+
 SECTIONS
 {
-    .  = 0x0800F480; /* firmware-5040 is C480 bytes long, 8003000 + C480 = F480 */
-
     .text : 
     {
+        KEEP(*(.bss_requested_len))
+        KEEP(*(.bss_ptr))
         . = ALIGN(4);
-        *(.text)
-        *(.text*)
-    }
+        *(.text .text*)
+        *(.rodata .rodata*)
+    } > FLASH
 
     .data : 
     {
-        . = ALIGN(4);
-        *(.data) 
-        *(.data*) 
-    }
-    .rodata :
-    {
-        . = ALIGN(4);
-        *(.rodata)
-        *(.rodata*)
-    }
-
+        *(.data .data*)
+    } > PROHIBITED_YOU_PROBABLY_INTRODUCED_A_GLOBAL_WRITABLE_VARIABLE /* No global data allowed */
 }
