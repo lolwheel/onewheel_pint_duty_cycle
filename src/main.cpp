@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 struct BSS_T {
-  uint8_t initialized;
 };
 
 /**
@@ -17,10 +16,14 @@ __attribute__((__used__)) = (BSS_T*)(0x200002B0 + 0x1998);
 /**
  * This function will be located 8 bytes into the stripped patch. 
  */
-int __attribute__((section(".entry"))) __attribute__((__used__)) patchFunc() {
-  if (!BSS->initialized) {
-    BSS->initialized = 1;
-    return 6;
+int16_t __attribute__((section(".entry"))) __attribute__((__used__)) patchFunc() {
+  int16_t v1 = *(int16_t*)(0x20001bc0);
+  int16_t v2 = *(int16_t*)(0x20001bc2);
+  if (v1 < 0) {
+    v1 = - v1;
   }
-  return 5;
+  if (v2 < 0) {
+    v2 = -v2;
+  }
+  return v1;
 }

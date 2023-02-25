@@ -1,0 +1,11 @@
+# Duty cycle patch for 5040 pint
+
+9c10 start of the param preparation
+9c1d end of the param prep
+
+0x20001bc0 : vI
+0x20001bc2 : vQ
+
+0x0800F488
+
+dd obs=1 if=.pio/build/genericSTM32F103R8/firmware_noinit.bin of=pint_5040_patched_yaw_trampoline.bin seek=62592 conv=notrunc
