@@ -1,5 +1,3 @@
-ENTRY(deriveAndWriteSoc)
-
 MEMORY
 {
   FLASH      (rx)  : ORIGIN = 0, LENGTH = 0x300 /* ORIGIN doesn't matter with -fPIC */
@@ -10,11 +8,13 @@ SECTIONS
 {
     .text : 
     {
-        KEEP(*(.bss_requested_len))
-        KEEP(*(.bss_ptr))
+        KEEP(*(.bss_requested_len)) /* Requested size of the BSS by this patch */
+        KEEP(*(.bss_ptr)) /* A loader/patcher is supposed to update this */
         . = ALIGN(4);
+        KEEP(*(.entry)) /* The main function goes here */
         *(.text .text*)
         *(.rodata .rodata*)
+        . = ALIGN(4); /* So that we don't need to pad the patches externally */
     } > FLASH
 
     .data : 

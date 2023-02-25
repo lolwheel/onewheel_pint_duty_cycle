@@ -67,7 +67,7 @@ uint8_t socFromStoredVoltages() {
   return openCircuitSocFromCellVoltage(lowestVoltage);
 }
 
-extern "C" void deriveAndWriteSoc() {
+ void __attribute__((section(".entry"))) __attribute__((__used__)) deriveAndWriteSoc() {
   if (voltagesAddress[0] == 0) {
     return;
   }
