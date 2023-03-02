@@ -1,11 +1,20 @@
 # Duty cycle patch for 5040 pint
 
-9c10 start of the param preparation
-9c1d end of the param prep
-
+# 5040 offsets:
 0x20001bc0 : vI
 0x20001bc2 : vQ
 
-0x0800F488
+# Trampoline offset for Yaw
+9c10 start of the param preparation
+9c1d end of the param prep
 
-dd obs=1 if=.pio/build/genericSTM32F103R8/firmware_noinit.bin of=pint_5040_patched_yaw_trampoline.bin seek=62592 conv=notrunc
+# Trampoline offset for Status
+9d06
+
+# trampoline code inserted right before the bluetooth_send_characteristic
+# calls to fw_end_offset + 8
+bl 0x0800F488
+mov r1, r0
+
+# patch a trampolined firmware. Writes the noinit version of firmware at the fw_end offset (the seek parameter)
+dd obs=1 if=.pio/build/genericSTM32F103R8/firmware_noinit.bin of=pint_5040_status_trampoline.bin seek=62592 conv=notrunc
